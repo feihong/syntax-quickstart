@@ -1,0 +1,31 @@
+// Lexical grammar
+
+%lex
+
+%%
+
+\s+ /* skip whitespace */
+
+\d+  return 'NUMBER'
+
+
+/lex
+
+// Syntactic grammar
+
+%%
+
+AdditiveExpression
+  : AdditiveExpression '+' MultiplicativeExpression
+  | MultiplicativeExpression
+  ;
+
+MultiplicativeExpression
+  : MultiplicativeExpression '*' PrimaryExpression
+  | PrimaryExpression
+  ;
+
+PrimaryExpression
+  : '(' AdditiveExpression ')'
+  | NUMBER
+  ;
