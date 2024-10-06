@@ -2,10 +2,10 @@ help:
   just --list
 
 install:
-  npm install
+  bun install
 
 validate:
-  npx syntax-cli --grammar letter.bnf --mode LALR1 --validate --table
+  bunx syntax-cli --grammar letter.bnf --mode LALR1 --validate --table
 
 parse text:
-  npx syntax-cli --grammar letter.bnf --mode LALR1 --parse "{{text}}"
+  bunx syntax-cli --grammar letter.bnf --mode LALR1 --parse "{{text}}"

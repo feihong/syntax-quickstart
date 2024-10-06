@@ -5,9 +5,9 @@
 %%
 
 \s+ /* skip whitespace */
-
 \d+  return 'NUMBER'
-
+[+\-] return 'ADDITIVE_OPERATOR'
+[*/] return 'MULTIPLICATIVE_OPERATOR'
 
 /lex
 
@@ -15,17 +15,52 @@
 
 %%
 
+Expression
+  : AdditiveExpression
+  ;
+
 AdditiveExpression
-  : AdditiveExpression '+' MultiplicativeExpression
+  : AdditiveExpression ADDITIVE_OPERATOR MultiplicativeExpression {
+      $$ = {
+        type: 'BinaryExpression',
+        op: $2,
+        left: $1,
+        right: $3,
+      }
+    }
   | MultiplicativeExpression
   ;
 
 MultiplicativeExpression
-  : MultiplicativeExpression '*' PrimaryExpression
+  : MultiplicativeExpression MULTIPLICATIVE_OPERATOR PrimaryExpression {
+      $$ = {
+        type: 'BinaryExpression',
+        op: $2,
+        left: $1,
+        right: $3,
+      }
+    }
   | PrimaryExpression
   ;
 
 PrimaryExpression
-  : '(' AdditiveExpression ')'
-  | NUMBER
+  : Literal
+  | ParenthesizedExpression
+  ;
+
+Literal
+  : NumericLiteral
+  ;
+
+NumericLiteral
+  : NUMBER {
+      $$ = {
+        type: 'NumericLiteral',
+        value: Number($1)
+      }
+    }
+  ;
+
+ParenthesizedExpression
+  : '(' Expression ')' { $$ = $2 }
   ;
